@@ -9,6 +9,7 @@
 </head>
 <body>
     <form action="/login" method="post">
+        {% csrf_token %}
         <div class="form-group">
           <label for="exampleInputEmail1">Username</label>
           <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" name="'username">

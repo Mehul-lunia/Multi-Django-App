@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
@@ -9,7 +9,7 @@ def index(request):
 def login(request):
     if request.method == 'POST':
         #if successful log-in , redirects to app's html page
-        pass
+        return render(request,'frontend/index.html')
     return render(request,'login.html')
 
 def logout(request):
