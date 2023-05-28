@@ -13,6 +13,10 @@ def index(request):
     return render(request, 'first.html')
 
 
+def app_view(request):
+    return render(request,'frontend/index.html')
+
+
 def login_function(request):
     if not request.session.exists(request.session.session_key):
         request.session.create()
