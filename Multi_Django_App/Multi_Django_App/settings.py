@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-SITE_ID =2
+SITE_ID = 2
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,23 +40,53 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.User_Mgmt',
+    'apps.EComm_plugin.apps.EcommPluginConfig',
+    'apps.User_Mgmt.apps.UserMgmtConfig',
+    'apps.About_Me.apps.AboutMeConfig',
+    'apps.IBM_plugin.apps.IbmPluginConfig',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    "google":{
-        "SCOPE":[
+    "google": {
+        "SCOPE": [
             "profile",
             "email"
         ],
-        "AUTH_PARAMS":{"access_type":"online"}
+        "AUTH_PARAMS": {"access_type": "online"}
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v13.0',
+        'GRAPH_API_URL': 'https://graph.facebook.com/v13.0',
     }
+
 }
+
+# SOCIAL_AUTH_FACEBOOK_KEY = '280366137748527'  # App ID
+# SOCIAL_AUTH_FACEBOOK_SECRET = '3576f0986a4bf8649b833b860a832bad'  # App Secret
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,6 +111,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
             ],
         },
     },
@@ -144,7 +175,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend"
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 LOGIN_REDIRECT_URL = '/app'

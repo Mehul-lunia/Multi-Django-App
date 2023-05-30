@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "react-bootstrap": "^2.7.4"
+    "csurf": "^1.11.0",
+    "react-bootstrap": "^2.7.4",
+    "react-router-dom": "^6.11.2"
   },
   "name": "multi_django_app",
   "version": "1.0.0",
@@ -13,6 +15,7 @@
     "@babel/preset-env": "^7.22.2",
     "@babel/preset-react": "^7.22.3",
     "babel-loader": "^9.1.2",
+    "mic-recorder-to-mp3": "^1.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "^5.84.1",

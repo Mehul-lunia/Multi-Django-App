@@ -1,7 +1,14 @@
+from django.dispatch import receiver
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from allauth.socialaccount.models import SocialAccount
+from allauth.account.signals import user_signed_up
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -9,12 +16,24 @@ def index(request):
         request.session.create()
     print(request.session.get('logged_in'))
     if request.session.get('logged_in') == "True":
-        return render(request, 'frontend/index.html')
+        return redirect('/app')
     return render(request, 'first.html')
 
 
+@login_required
 def app_view(request):
-    return render(request,'frontend/index.html')
+    return render(request, 'frontend/index.html')
+
+
+@api_view(['GET'])
+def test(request):
+    user = request.user
+    social_account = SocialAccount.objects.get(user=user)
+    extra_data = social_account.extra_data
+    if extra_data is not None:
+        print(extra_data)
+        return Response(extra_data, status=status.HTTP_200_OK)
+    return Response({"msg": "not working"}, status=status.HTTP_404_NOT_FOUND)
 
 
 def login_function(request):
@@ -33,7 +52,7 @@ def login_function(request):
             print(request.session.get('logged_in'))
             login(request, user)
 
-        return render(request, "frontend/index.html")
+        return redirect('/app')
     return render(request, "login.html")
 
 
