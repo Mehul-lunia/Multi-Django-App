@@ -15,16 +15,35 @@
   <body>
     {% load socialaccount %}
     
-    <button class="btn btn-primary">
-      <a href="/login" class="text-light">Login</a>
-    </button>
-    <button class="btn btn-primary">
-      <a href="/signup" class="text-light">Signup</a>
-    </button>
     
     
-    <a href="{% provider_login_url 'google' %}?next=/app"><img src="static/images/google.png" alt="Google logo" height="50px" width="50px"></a>
-    <a href="{% provider_login_url 'facebook' method='oauth2' %}"><img src="static/images/facebook.png" alt="Facebook logo" height="50px" width="50px"></a>
+    
+    <div class="d-flex justify-content-center align-items-center" style="height:100vh">
+
+      <div class="card mx-5" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Login</h5>
+          
+          <p class="card-text">Login to your existing account,to start using our app</p>
+          
+          <button class="btn btn-primary">
+            <a href="/login" class="text-light">Login</a>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Sign-up</h5>
+          
+          <p class="card-text">Register a new account if you are a new user.</p>
+          <button class="btn btn-primary">
+            <a href="/signup" class="text-light">Signup</a>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"

@@ -1,39 +1,59 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav'
 import { Link } from 'react-router-dom';
-import NavbarToggle from 'react-bootstrap/esm/NavbarToggle';
+
 
 
 const NavbarComponent = () => {
 
     const [profPic, setProfPic] = useState(null)
     const [name,setName] = useState(null)
+    
+    useEffect(
+        () => {
+            fetch('/test')
+                .then((res) => { 
+                    if(res.ok){
+                        return res.json()
+                    }
+                    else{
+                        return "no"
+                    }
+                    } )
+                .then((data) => { 
+                    if(data !="no"){
+                        setName(data.given_name);
+                        setProfPic(data.picture);
+                    }
+        })
+        
 
-    const func = () => {
-        console.log('func')
-        fetch('/test')
-            .then((res) => { 
-                console.log(res.status)
-                return res.json()} )
-            .then((data) => { 
-                setName(data.given_name)
-                setProfPic(data.picture) })
-    }
-    func()
+        }
+      
+        ,[])
+
+    
+    
     return (
         <Navbar bg="dark" variant="dark">
-            <Navbar.Brand><Link to='/app'>MyProject</Link></Navbar.Brand>
+            <Navbar.Brand as={Link} to="app" className='text-light text-decoration-none'>MyProject</Navbar.Brand>
             <Container>
-                {/* <Nav className="me-auto"> */}
-            <Navbar.Text><Link to='/app/speech'>ibm</Link></Navbar.Text>
-            <Navbar.Text><Link to='/app/ecomm'>e-commerce store</Link></Navbar.Text>
-            <Navbar.Text><Link to='/app/about'>About me</Link></Navbar.Text>
-                {/* </Nav> */}
+              
+                <Navbar.Collapse>
+            <Navbar.Text as={Link} to='app/speech' className='text-light text-decoration-none'>Audio Translator</Navbar.Text>
+                </Navbar.Collapse>
+                <Navbar.Collapse>
+            <Navbar.Text as={Link} to="/app/ecomm" className="text-light text-decoration-none">E-commerce Store</Navbar.Text>
+                </Navbar.Collapse>
+                <Navbar.Collapse>
+            <Navbar.Text as={Link} to="app/about" className="text-light text-decoration-none">About me</Navbar.Text>
+                </Navbar.Collapse>
+             
             </Container>
             <Navbar.Collapse className='justify-content-end'>
                 <Navbar.Text>{name}</Navbar.Text>
+                
             <Container>
           <Navbar.Brand>
             <img
@@ -41,7 +61,7 @@ const NavbarComponent = () => {
               width="30"
               height="30"
               className=""
-              alt="React Bootstrap logo"
+              alt={name}
             />
           </Navbar.Brand>
         </Container>

@@ -28,12 +28,15 @@ def app_view(request):
 @api_view(['GET'])
 def test(request):
     user = request.user
-    social_account = SocialAccount.objects.get(user=user)
-    extra_data = social_account.extra_data
-    if extra_data is not None:
-        print(extra_data)
-        return Response(extra_data, status=status.HTTP_200_OK)
-    return Response({"msg": "not working"}, status=status.HTTP_404_NOT_FOUND)
+    is_social = user.socialaccount_set.exists()
+    if is_social:
+        social_account = SocialAccount.objects.get(user=user)
+        extra_data = social_account.extra_data
+        if extra_data is not None:
+            print(extra_data)
+            return Response(extra_data, status=status.HTTP_200_OK)
+        return Response({"msg": "not working"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"msg":"not social"},status=status.HTTP_204_NO_CONTENT)
 
 
 def login_function(request):
@@ -99,7 +102,7 @@ def signup(request):
         user.last_name = lname
         user.save()
 
-        return redirect('/login')
+        return redirect('/')
     return render(request, 'signup.html')
 
 
