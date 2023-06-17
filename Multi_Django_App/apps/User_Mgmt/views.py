@@ -1,4 +1,4 @@
-from django.dispatch import receiver
+import base64
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
+from .models import UserProfile
+
 
 
 def index(request):
@@ -36,7 +38,7 @@ def test(request):
             print(extra_data)
             return Response(extra_data, status=status.HTTP_200_OK)
         return Response({"msg": "not working"}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({"msg":"not social"},status=status.HTTP_204_NO_CONTENT)
+    return Response({"msg":"not social"},status=status.HTTP_404_NOT_FOUND)
 
 
 def login_function(request):
@@ -58,11 +60,14 @@ def login_function(request):
         return redirect('/app')
     return render(request, "login.html")
 
-
+@api_view(['GET'])
 def logout_function(request):
-    request.session.pop('logged_in')
+    if not request.session.exists(request.session.session_key):
+        request.session.create()
+    if request.session.get('logged_in'):
+        request.session.pop('logged_in')
     logout(request)
-    messages.success(request, "Successfully logged out!")
+    return Response({"msg":"logged out"},status=status.HTTP_200_OK)
 
 
 def signup(request):
@@ -74,6 +79,7 @@ def signup(request):
         email = request.POST.get('email')
         pass1 = request.POST.get('pass1')
         pass2 = request.POST.get('pass2')
+        
 
         if User.objects.filter(username=username):
             messages.error(request, "This username is already taken!!")
@@ -91,6 +97,23 @@ def signup(request):
         if User.objects.filter(email=email):
             messages.error(request, "The E-mail you entered is already taken")
             return redirect('/')
+        if 'profilePic'  in request.FILES :
+            image_file = request.FILES["profilePic"]
+            image_file_binary = image_file.read()
+        else:
+            content = open('static/images/th.jpeg','rb')
+            image_file_binary = content.read()
+            content.close()
+            
+                
+                
+
+
+        
+        user_profile_object = UserProfile()
+        user_profile_object.user_username = username
+        user_profile_object.profile_picture = image_file_binary
+        user_profile_object.save()
 
         user = User.objects.create_user(
             username=username,
@@ -108,3 +131,26 @@ def signup(request):
 
 def activate_account():
     pass
+
+
+
+@api_view(['GET'])
+def get_user_details_view(request):
+    print(request.user.username)
+    curr_user = User.objects.get(username=request.user.username)
+    if curr_user is not None:
+        username = curr_user.username
+
+        curr_userProfile_object = UserProfile.objects.filter(user_username=username)
+        if curr_userProfile_object.exists():
+            userProfile_object = curr_userProfile_object[0]
+                
+            profile_pic_binary = userProfile_object.profile_picture  
+            b64 = base64.b64encode(profile_pic_binary).decode('utf-8')
+            return Response({"msg":b64,"username":username},status=status.HTTP_200_OK)
+        with open('static/images/th.jpeg','rb') as fp:
+            profile_pic_binary = fp.read()
+        b64 = base64.b64encode(profile_pic_binary).decode('utf-8')
+        return Response({"msg":b64,"username":username},status=status.HTTP_200_OK)
+
+    return Response({"msg":"cannot find anything in User Model corresponding to the request"},status=status.HTTP_400_BAD_REQUEST)

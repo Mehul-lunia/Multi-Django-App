@@ -3,6 +3,7 @@ from ibm_watson import LanguageTranslatorV3
 from ibm_watson import SpeechToTextV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import io
+import base64
 
 
 
@@ -48,7 +49,6 @@ def convert_translated_text_to_speech(translated_text,translate_to_language):
     return blob
 
 
-import base64
 
 def convert_blob_to_base64(byteData):
         base64_data = base64.b64encode(byteData).decode('utf-8')

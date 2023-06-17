@@ -12,5 +12,6 @@ urlpatterns = [
     path('app/ecomm',app_view),
     path('app/about',app_view),
     path('test', test, name="test"),
+    path('get-user-details',get_user_details_view,name="get-user-details")
 
 ]

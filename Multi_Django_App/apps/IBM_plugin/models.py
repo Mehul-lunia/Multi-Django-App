@@ -5,3 +5,4 @@ class BlobStorage(models.Model):
     english_input = models.CharField(max_length=300)
     english_blob = models.BinaryField()
     translated_blob = models.BinaryField()
+    created_at = models.DateTimeField(auto_now_add=True)
